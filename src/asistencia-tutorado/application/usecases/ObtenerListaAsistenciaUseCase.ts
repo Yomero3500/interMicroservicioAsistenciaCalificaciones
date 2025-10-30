@@ -1,4 +1,3 @@
-import { AsistenciaTutorado } from '../../domain/entities/AsistenciaTutorado';
 import { EstadoAsistenciaTutorado } from '../../domain/enums/EstadoAsistenciaTutorado';
 import { IAsistenciaTutoradoRepository } from '../ports/output/IAsistenciaTutoradoRepository';
 import { AlumnoRepository } from '../../../shared/infrastructure/persistence/repositories/AlumnoRepository';
