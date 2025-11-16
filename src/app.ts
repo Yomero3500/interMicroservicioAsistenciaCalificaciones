@@ -11,18 +11,29 @@ const app = express();
 
 // Configuración de CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',')
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
   : ['http://localhost:5173', 'http://localhost:3000'];
+
+console.log('🌍 CORS - Orígenes permitidos:', allowedOrigins);
 
 app.use(cors({
   origin: (origin, callback) => {
+    console.log('🔍 CORS Request from:', origin || 'NO ORIGIN');
+    
     // Permitir requests sin origin (como mobile apps o Postman)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+    // Si ALLOWED_ORIGINS incluye '*', permitir todo
+    if (allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    
+    // Verificar si el origen está en la lista
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(null, true); // En producción, cambiar a: callback(new Error('Not allowed by CORS'));
+      console.warn('⚠️ CORS bloqueado para origen:', origin);
+      callback(null, true); // Temporal: permitir de todos modos para debugging
     }
   },
   credentials: true,
